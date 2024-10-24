@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,10 +8,11 @@ import (
 
 type PackageJSON struct {
 	Name        string            `json:"name"`
+	Private	 bool              `json:"private"`
 	Version     string            `json:"version"`
-	Description string            `json:"description"`
-	Main        string            `json:"main"`
+	Type string            `json:"type"`
 	Scripts     map[string]string `json:"scripts"`
+	DevDependencies map[string]string        `json:"devDependencies"`
 }
 
 func (pj PackageJSON) String() string {
@@ -21,61 +21,63 @@ func (pj PackageJSON) String() string {
 
 func BootStrapApp(appName string) {
 
-
-	// create folder for app
-	appScaffold := exec.Command(
-		"mkdir",
-		appName,
-	)
-
-	_, err := appScaffold.Output()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	// initialize npm and install vite in app folder
-	fmt.Println("Installing Vite...")
-	npmInit := exec.Command(
+	// create vite app
+	viteAppScaffold := exec.Command(
 		"npm",
-		"init",
-		"-y",
+		"create",
+		"vite@latest",
+		appName,
+		"--",
+		"--template",
+		"vanilla",
 	)
 
-	npmInit.Dir = appName
-
-	_, err = npmInit.Output()
+	_, err := viteAppScaffold.Output()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	npmInstallVite := exec.Command(
+	// install tailwind, postcss, autoprefixer
+	npmInstallTailwind := exec.Command(
 		"npm",
 		"install",
 		"-D",
-		"vite",
+		"tailwindcss",
+		"postcss",
+		"autoprefixer",
 	)
 
-	npmInstallVite.Dir = appName
+	npmInstallTailwind.Dir = appName
 
-	_, err = npmInstallVite.Output()
+	_, err = npmInstallTailwind.Output()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// add dev script to package.json
-	var data PackageJSON
+	//install lucide
+	npmInstallLucide := exec.Command(
+		"npm",
+		"install",
+		"lucide",
+	)
 
-	jsonFile, err := os.ReadFile("./app/package.json")
+	npmInstallLucide.Dir = appName
 
-	if err != nil{
-		panic(err)
-	}
-
-	err = json.Unmarshal(jsonFile, &data)
-
+	_, err = npmInstallLucide.Output()
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
-	fmt.Print(data)
+	// write into tailwind.config.js
+	os.WriteFile(fmt.Sprintf("./%s/tailwind.config.js", appName), []byte(TAILWIND_CONTENT), 0644)
+
+	// write into postcss.config.js
+	os.WriteFile(fmt.Sprintf("./%s/postcss.config.js", appName), []byte(POST_CSS_CONTENT), 0644)
+
+	// write into style.css
+	os.WriteFile(fmt.Sprintf("./%s/style.css", appName), []byte(STYLE_CSS_CONTENT), 0644)
+
+	// write into main.js
+	os.WriteFile(fmt.Sprintf("./%s/main.js", appName), []byte(MAIN_JS_CONTENT), 0644)
+
 }
