@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -35,7 +34,6 @@ func GetFilesInDirectory(rootPath, dirPath string) ([]string, error) {
             name = dirPath + "/" + entry.Name()
         }
 
-        fmt.Println(name)
         files = append(files, name)
     }
 
