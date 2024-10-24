@@ -6,24 +6,24 @@ import (
 	"html/template"
 	"os"
 )
+
 type Project struct {
-	Name string `json:"name"`
-	Description string `json:"description"`
-	TechStack []string `json:"techStack"`
-	Github string `json:"github"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	TechStack   []string `json:"techStack"`
+	Github      string   `json:"github"`
 }
 
 type Social struct {
-	Github string `json:"github"`
-	Linkedin string `json:"linkedin"`
-	Email string `json:"email"`
-}
- 
-type UserInfo struct {
 	Name string `json:"name"`
-	JobTitle string `json:"jobTitle"`
-	Bio string `json:"bio"`
-	Socials []Social `json:"socials"`
+	Url string `json:"url"`
+}
+
+type UserInfo struct {
+	Name     string    `json:"name"`
+	JobTitle string    `json:"jobTitle"`
+	Bio      string    `json:"bio"`
+	Socials  []Social  `json:"socials"`
 	Projects []Project `json:"projects"`
 }
 
@@ -38,7 +38,6 @@ func FormatTemplate(appName string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 
 	t, err := template.New("webpage").Parse(string(htmlTemplate))
 	if err != nil {
@@ -59,16 +58,13 @@ func FormatTemplate(appName string) {
 		fmt.Println(err)
 	}
 
-
 	// f, err := os.Create("output.html")
-	f, err := os.Create("./app/index.html")
+	f, err := os.Create(fmt.Sprintf("./%s/index.html", appName))
 
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-
-
 
 	// Execute the template
 	err = t.Execute(f, data)
