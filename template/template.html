@@ -7,29 +7,57 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app">
-        <h1>{{.Name}} is a {{.JobTitle}}</h1>
-        <p>{{.Bio}}</p>
+    <div class="max-w-screen-md mx-auto text-2xl px-5">
+        <div class="pt-14 sm:pt-32 mb-10">
+            <h1 class="text-2xl sm:text-4xl font-bold">
+                {{.Name}}, {{.JobTitle}}
+            </h1>
 
-        <div>
-            <ul>
+            <p class="text-lg py-5">
+                {{.Bio}}
+            </p>
+
+            <div class="flex gap-2 flex-wrap">
                 {{range .Socials}}
-                    <li>social</li>
+                    <a class="custom-chip" href={{.Url}}>
+                        {{.Name}}
+                    </a>
                 {{end}}
-            </ul>
+            </div>
         </div>
-        <ul>
-            {{range .Projects}}
-                <li>
+
+        <div class="my-2">
+            <h1 class="flex mb-3 items-center gap-x-2 text-xl font-bold">
+                Projects
+                <i class="w-7" data-lucide="code-xml"></i>
+            </h1>
+
+            <div class="space-y-10">
+                {{range .Projects}}
                     <div>
-                        <h3>{{.Name}}</h3>
-                        <p>{{.Description}}</p>
-                        <p>{{.TechStack}}</p>
-                        <a href="{{.Github}}">Github</a>
+                        <h2 class="text-lg font-bold">{{.Name}}</h2>
+                        <p class="text-base">
+                            {{.Description}}
+                        </p>
+                        <div>
+                            {{range .TechStack}}
+                                <span class="custom-chip custom-chip-sm mr-2">{{.}}</span>
+                            {{end}}
+                        </div>
+                        <div class="flex gap-4 my-5">
+                            <a 
+                                href=""
+                                class="flex items-center gap-1 hover:underline"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <i class="w-7" data-lucide="github"></i>
+                            </a>
+                        </div>
                     </div>
-                </li>
-            {{end}}
-        </ul>
+                {{end}}     
+            </div>
+        </div>
     </div>
     <script type="module" src="/main.js"></script>
   </body>

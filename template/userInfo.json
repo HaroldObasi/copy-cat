@@ -3,9 +3,18 @@
     "jobTitle": "Software Engineer",
     "bio": "I am a software engineer with a passion for building scalable web applications.",
     "socials": [
-        {"linkedin": "https://www.linkedin.com/in/johndoe"},
-        {"github": "https://www.github.com/johndoe"},
-        {"email": "jdoe@email.com"}
+      {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/in/johndoe"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://www.github.com/johndoe"
+      },
+      {
+        "name": "Email",
+        "url": "mailto:johndoe@gmail.com"
+      }
     ],
     "projects": [
         {
