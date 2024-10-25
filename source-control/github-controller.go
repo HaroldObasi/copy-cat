@@ -2,32 +2,21 @@ package sourcecontrol
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 
 	"net/http"
 
 	"github.com/HaroldObasi/copy-cat/utils"
 )
 
-type CreateRepoRequest struct{
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Homepage string `json:"homepage"`
-	Private bool `json:"private"`
-	IsTemplate bool `json:"is_template"`
-}
-
-type CreateRepoResponse struct{
-	HtmlUrl string `json:"html_url"`
-	Url string `json:"url"`
-}
-
 var client = &http.Client{}
 
 
-func CreateRepo(repoName, token string) string {
+func CreateRepo(repoName, token string) (string, string)  {
 
 	data := CreateRepoRequest{
 		Name: repoName,
@@ -81,15 +70,75 @@ func CreateRepo(repoName, token string) string {
 	fmt.Println("Html url: ", response.HtmlUrl)
 	fmt.Println("Url: ", response.Url)
 
-	return response.Url
+	return response.Url, response.HtmlUrl
 }
 
-func UploadDir(dir, apiUrl, token string) []string {
+func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
+	url := apiUrl + "/contents/" + fileName
+
+	data := UploadFileRequest{
+		Message: "Initial commit",
+		Content: base64Encoded,
+		Committer: Committer{
+			Name: "Harold Obasi",
+			Email: "haroldobasi2k16@gmail.com",
+		},
+	}
+
+	jsonData, err := json.Marshal(data)
+
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonData))
+
+	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Content-Type", "application/json")
+
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(body))
+
+	return nil
+}
+
+func UploadDir(dir, apiUrl, token string){
 	content, err := utils.GetFilesInDirectory("./" ,dir)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(content)
-	return []string{}
+	// iterate over the files and upload them to the repo
+	for _, file := range content {
+		fileContent, err := os.ReadFile(dir+"/"+file)
+
+		if err != nil {
+			panic(err)
+		}
+
+		encoded := base64.StdEncoding.EncodeToString(fileContent)
+
+		err = UploadFile(file, apiUrl, encoded, token)
+
+		if err != nil {
+			fmt.Println("Error uploading file: ", file)
+		}
+	}
 }
