@@ -15,9 +15,6 @@ type PackageJSON struct {
 	DevDependencies map[string]string `json:"devDependencies"`
 }
 
-func (pj PackageJSON) String() string {
-	return fmt.Sprintf("Name: %v", pj.Name)
-}
 
 func BootStrapApp(appName string) {
 
