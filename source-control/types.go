@@ -23,3 +23,7 @@ type UploadFileRequest struct {
 	Content   string    `json:"content"`
 	Committer Committer `json:"committer"`
 }
+
+type GithubUser struct {
+	Login string `json:"login"`
+}

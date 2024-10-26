@@ -15,6 +15,40 @@ import (
 
 var client = &http.Client{}
 
+func GetUserInfo(token string) {
+	url := "https://api.github.com/user"
+
+	request, err := http.NewRequest("GET", url, nil)
+
+	request.Header.Set("Authorization", "Bearer "+token)
+
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := client.Do(request)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	githubUser := GithubUser{}
+
+	err = json.Unmarshal(body, &githubUser)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
 func CreateRepo(repoName, token string) (string, string) {
 
 	data := CreateRepoRequest{
@@ -78,10 +112,6 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 	data := UploadFileRequest{
 		Message: "Initial commit",
 		Content: base64Encoded,
-		Committer: Committer{
-			Name:  "Harold Obasi",
-			Email: "haroldobasi2k16@gmail.com",
-		},
 	}
 
 	jsonData, err := json.Marshal(data)
