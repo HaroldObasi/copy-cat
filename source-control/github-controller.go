@@ -115,31 +115,24 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 	}
 
 	jsonData, err := json.Marshal(data)
-
 	if err != nil {
 		return err
 	}
 
 	request, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonData))
-
-	request.Header.Set("Authorization", "Bearer "+token)
-	request.Header.Set("Content-Type", "application/json")
-
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.Do(request)
+	request.Header.Set("Authorization", "Bearer "+token)
+	request.Header.Set("Content-Type", "application/json")
 
+	resp, err := client.Do(request)
 	if err != nil {
 		return err
 	}
 
 	defer resp.Body.Close()
-
-	if err != nil {
-		return err
-	}
 
 	return nil
 }
