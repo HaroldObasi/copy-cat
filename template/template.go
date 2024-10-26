@@ -31,7 +31,7 @@ func (u UserInfo) String() string {
 	return fmt.Sprintf("Name: %s\nJobTitle: %s\nBio: %s\nSocials: %v\nProjects: %v\n", u.Name, u.JobTitle, u.Bio, u.Socials, u.Projects)
 }
 
-func FormatTemplate(appName string) {
+func FormatTemplate(appName, userInfoPath string) {
 	fmt.Println("Setting up template")
 	htmlTemplate, err := os.ReadFile("./template/template.html")
 
@@ -44,7 +44,7 @@ func FormatTemplate(appName string) {
 		fmt.Println(err)
 	}
 
-	jsonFile, err := os.ReadFile("./template/userInfo.json")
+	jsonFile, err := os.ReadFile(userInfoPath)
 
 	if err != nil {
 		fmt.Println(err)
