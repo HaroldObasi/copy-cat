@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/HaroldObasi/copy-cat/bootstrap"
 	"github.com/HaroldObasi/copy-cat/deployments"
@@ -43,12 +44,18 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	}
 
 	userInfoPath = absPath
+	
+	start := time.Now()
 
 	bootstrap.BootStrapApp(appName)
 	template.FormatTemplate(appName, userInfoPath)
 	apiUrl, htmlUrl := sourcecontrol.CreateRepo(appName, githubToken)
 	sourcecontrol.UploadDir(appName, apiUrl, githubToken)
 	deployments.DeployToVercel(htmlUrl, vercelToken, appName)
+
+	elapsed := time.Since(start)
+
+	fmt.Println("Time taken: ", elapsed)
 }
 
 func PreRunChecks(cmd *cobra.Command, args []string) error {
