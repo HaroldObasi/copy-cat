@@ -13,15 +13,15 @@ var client = &http.Client{}
 
 func CreateProject(projectName, repo, token string) CreateProjectResponse {
 	reqData := CreateProjectRequest{
-		Name: projectName,
-		BuildCommand: "npm run build",
+		Name:                              projectName,
+		BuildCommand:                      "npm run build",
 		EnableAffectedProjectsDeployments: false,
-		Framework: Vite,
+		Framework:                         Vite,
 		GitRepository: GitRepository{
 			Repo: repo,
 			Type: Github,
 		},
-		InstallCommand: "npm install",
+		InstallCommand:           "npm install",
 		SkipGitConnectDuringLink: false,
 	}
 
@@ -37,7 +37,7 @@ func CreateProject(projectName, repo, token string) CreateProjectResponse {
 		panic(err)
 	}
 
-	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Content-Type", "application/json")
 
 	clientResp, err := client.Do(request)
@@ -53,7 +53,7 @@ func CreateProject(projectName, repo, token string) CreateProjectResponse {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	responseData := CreateProjectResponse{}
 
 	err = json.Unmarshal(body, &responseData)
@@ -65,14 +65,14 @@ func CreateProject(projectName, repo, token string) CreateProjectResponse {
 	return responseData
 }
 
-func CreateDeployment(projectName, token string, repoId int){
+func CreateDeployment(projectName, token string, repoId int) {
 	reqData := DeployProjectRequest{
 		Name: projectName,
 		GitSource: GitSource{
-			Ref: "main",
+			Ref:    "main",
 			RepoId: repoId,
-			Type: Github,
-		},	
+			Type:   Github,
+		},
 		ProjectSettings: projectSettings{
 			Framework: Vite,
 		},
@@ -89,7 +89,7 @@ func CreateDeployment(projectName, token string, repoId int){
 		panic(err)
 	}
 
-	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Content-Type", "application/json")
 
 	clientResp, err := client.Do(request)

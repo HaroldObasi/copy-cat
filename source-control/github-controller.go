@@ -15,15 +15,14 @@ import (
 
 var client = &http.Client{}
 
-
-func CreateRepo(repoName, token string) (string, string)  {
+func CreateRepo(repoName, token string) (string, string) {
 
 	data := CreateRepoRequest{
-		Name: repoName,
+		Name:        repoName,
 		Description: "This is a test repo",
-		Homepage: "https://github.com",
-		Private: true,
-		IsTemplate: false,
+		Homepage:    "https://github.com",
+		Private:     true,
+		IsTemplate:  false,
 	}
 
 	jsonData, err := json.Marshal(data)
@@ -36,7 +35,7 @@ func CreateRepo(repoName, token string) (string, string)  {
 
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 
-	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Content-Type", "application/json")
 
 	if err != nil {
@@ -80,7 +79,7 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 		Message: "Initial commit",
 		Content: base64Encoded,
 		Committer: Committer{
-			Name: "Harold Obasi",
+			Name:  "Harold Obasi",
 			Email: "haroldobasi2k16@gmail.com",
 		},
 	}
@@ -93,7 +92,7 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 
 	request, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonData))
 
-	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Content-Type", "application/json")
 
 	if err != nil {
@@ -119,15 +118,15 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 	return nil
 }
 
-func UploadDir(dir, apiUrl, token string){
-	content, err := utils.GetFilesInDirectory("./" ,dir)
+func UploadDir(dir, apiUrl, token string) {
+	content, err := utils.GetFilesInDirectory("./", dir)
 	if err != nil {
 		panic(err)
 	}
 
 	// iterate over the files and upload them to the repo
 	for _, file := range content {
-		fileContent, err := os.ReadFile(dir+"/"+file)
+		fileContent, err := os.ReadFile(dir + "/" + file)
 
 		if err != nil {
 			panic(err)

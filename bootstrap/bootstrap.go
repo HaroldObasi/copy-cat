@@ -7,12 +7,12 @@ import (
 )
 
 type PackageJSON struct {
-	Name        string            `json:"name"`
-	Private	 bool              `json:"private"`
-	Version     string            `json:"version"`
-	Type string            `json:"type"`
-	Scripts     map[string]string `json:"scripts"`
-	DevDependencies map[string]string        `json:"devDependencies"`
+	Name            string            `json:"name"`
+	Private         bool              `json:"private"`
+	Version         string            `json:"version"`
+	Type            string            `json:"type"`
+	Scripts         map[string]string `json:"scripts"`
+	DevDependencies map[string]string `json:"devDependencies"`
 }
 
 func (pj PackageJSON) String() string {
