@@ -116,7 +116,7 @@ func CreateDeployment(projectName, token string, repoId int) {
 		panic(err)
 	}
 
-	fmt.Print("App deployed at: ", response.Alias[0])
+	fmt.Println("App deployed at: ", response.Alias[0])
 }
 
 func DeployToVercel(repoUrl, token, appName string) {
