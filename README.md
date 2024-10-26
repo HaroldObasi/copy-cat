@@ -109,7 +109,7 @@ Create a `user-info.json` file with your portfolio information:
 
 ```bash
 # Generate and deploy a portfolio named "john-portfolio"
-copy-cat -a john-portfolio -g ghp_123abc... -v vercel_token_123... -u ./john-info.json
+copy-cat -a john-portfolio -g ghp_123abc -v vercel_token_123 -u ./user-info.json
 ```
 
 ## Contributing
