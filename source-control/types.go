@@ -21,5 +21,8 @@ type Committer struct {
 type UploadFileRequest struct {
 	Message   string    `json:"message"`
 	Content   string    `json:"content"`
-	Committer Committer `json:"committer"`
+}
+
+type GithubUser struct {
+	Login string `json:"login"`
 }
