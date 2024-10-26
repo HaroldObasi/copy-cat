@@ -15,8 +15,42 @@ import (
 
 var client = &http.Client{}
 
-func CreateRepo(repoName, token string) (string, string) {
+func GetUserInfo(token string) {
+	url := "https://api.github.com/user"
 
+	request, err := http.NewRequest("GET", url, nil)
+
+	request.Header.Set("Authorization", "Bearer "+token)
+
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := client.Do(request)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	githubUser := GithubUser{}
+
+	err = json.Unmarshal(body, &githubUser)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CreateRepo(repoName, token string) (string, string) {
+	fmt.Println("Creating repo: ", repoName)
 	data := CreateRepoRequest{
 		Name:        repoName,
 		Description: "This is a test repo",
@@ -56,8 +90,6 @@ func CreateRepo(repoName, token string) (string, string) {
 		panic(err)
 	}
 
-	fmt.Println(string(body))
-
 	response := CreateRepoResponse{}
 
 	err = json.Unmarshal(body, &response)
@@ -66,55 +98,43 @@ func CreateRepo(repoName, token string) (string, string) {
 		panic(err)
 	}
 
-	fmt.Println("Html url: ", response.HtmlUrl)
-	fmt.Println("Url: ", response.Url)
-
 	return response.Url, response.HtmlUrl
 }
 
 func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
+	fmt.Println("Uploading file: ", fileName)
 	url := apiUrl + "/contents/" + fileName
 
 	data := UploadFileRequest{
 		Message: "Initial commit",
 		Content: base64Encoded,
-		Committer: Committer{
-			Name:  "Harold Obasi",
-			Email: "haroldobasi2k16@gmail.com",
-		},
 	}
 
 	jsonData, err := json.Marshal(data)
-
 	if err != nil {
 		return err
 	}
 
 	request, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonData))
-
-	request.Header.Set("Authorization", "Bearer "+token)
-	request.Header.Set("Content-Type", "application/json")
-
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.Do(request)
+	request.Header.Set("Authorization", "Bearer "+token)
+	request.Header.Set("Content-Type", "application/json")
 
+	resp, err := client.Do(request)
 	if err != nil {
 		return err
 	}
 
 	defer resp.Body.Close()
 
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func UploadDir(dir, apiUrl, token string) {
+	fmt.Println("Pushing app to the repo")
 	content, err := utils.GetFilesInDirectory("./", dir)
 	if err != nil {
 		panic(err)
