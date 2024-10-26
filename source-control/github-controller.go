@@ -50,7 +50,7 @@ func GetUserInfo(token string) {
 }
 
 func CreateRepo(repoName, token string) (string, string) {
-
+	fmt.Println("Creating repo: ", repoName)
 	data := CreateRepoRequest{
 		Name:        repoName,
 		Description: "This is a test repo",
@@ -100,13 +100,11 @@ func CreateRepo(repoName, token string) (string, string) {
 		panic(err)
 	}
 
-	fmt.Println("Html url: ", response.HtmlUrl)
-	fmt.Println("Url: ", response.Url)
-
 	return response.Url, response.HtmlUrl
 }
 
 func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
+	fmt.Println("Uploading file: ", fileName)
 	url := apiUrl + "/contents/" + fileName
 
 	data := UploadFileRequest{
@@ -138,6 +136,7 @@ func UploadFile(fileName, apiUrl, base64Encoded, token string) error {
 }
 
 func UploadDir(dir, apiUrl, token string) {
+	fmt.Println("Pushing app to the repo")
 	content, err := utils.GetFilesInDirectory("./", dir)
 	if err != nil {
 		panic(err)

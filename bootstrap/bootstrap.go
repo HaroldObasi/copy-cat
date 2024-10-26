@@ -21,6 +21,8 @@ func (pj PackageJSON) String() string {
 
 func BootStrapApp(appName string) {
 
+	fmt.Println("Bootstrapping App with vite.")
+
 	// create vite app
 	viteAppScaffold := exec.Command(
 		"npm",
@@ -37,6 +39,7 @@ func BootStrapApp(appName string) {
 		fmt.Println(err)
 	}
 
+	fmt.Println("Installing dependencies.")
 	// install tailwind, postcss, autoprefixer
 	npmInstallTailwind := exec.Command(
 		"npm",
@@ -79,5 +82,7 @@ func BootStrapApp(appName string) {
 
 	// write into main.js
 	os.WriteFile(fmt.Sprintf("./%s/main.js", appName), []byte(MAIN_JS_CONTENT), 0644)
+
+	fmt.Println("App bootstrapped successfully.")
 
 }

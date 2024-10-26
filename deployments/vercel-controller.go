@@ -12,6 +12,7 @@ import (
 var client = &http.Client{}
 
 func CreateProject(projectName, repo, token string) CreateProjectResponse {
+	fmt.Println("Creating project on vercel")
 	reqData := CreateProjectRequest{
 		Name:                              projectName,
 		BuildCommand:                      "npm run build",
@@ -66,6 +67,7 @@ func CreateProject(projectName, repo, token string) CreateProjectResponse {
 }
 
 func CreateDeployment(projectName, token string, repoId int) {
+	fmt.Println("Creating initial deployment on vercel")
 	reqData := DeployProjectRequest{
 		Name: projectName,
 		GitSource: GitSource{
@@ -114,10 +116,11 @@ func CreateDeployment(projectName, token string, repoId int) {
 		panic(err)
 	}
 
-	fmt.Print("deployment url: ", response.Alias[0])
+	fmt.Print("App deployed at: ", response.Alias[0])
 }
 
 func DeployToVercel(repoUrl, token, appName string) {
+	fmt.Println("Deploying to Vercel")
 
 	parts := strings.Split(repoUrl, "/")
 	repo := parts[len(parts)-2] + "/" + parts[len(parts)-1]
