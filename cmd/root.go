@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 	Long: `Generate and deploy static site portfolio
 	
 	Example: copy-cat -a my-app -g YOUR_GITHUB_TOKEN -v YOUR_VERCEL_TOKEN -u user-info-path.json`,
-	Run: RunCommand,
+	Run:     RunCommand,
 	PreRunE: PreRunChecks,
 }
 
@@ -29,7 +29,7 @@ func init() {
 	rootCmd.Flags().StringP("userInfoPath", "u", "", "Path to user info")
 }
 
-func RunCommand(cmd *cobra.Command, args []string){
+func RunCommand(cmd *cobra.Command, args []string) {
 	appName, _ := cmd.Flags().GetString("appName")
 	githubToken, _ := cmd.Flags().GetString("githubToken")
 	vercelToken, _ := cmd.Flags().GetString("vercelToken")
@@ -49,12 +49,6 @@ func RunCommand(cmd *cobra.Command, args []string){
 	apiUrl, htmlUrl := sourcecontrol.CreateRepo(appName, githubToken)
 	sourcecontrol.UploadDir(appName, apiUrl, githubToken)
 	deployments.DeployToVercel(htmlUrl, vercelToken, appName)
-
-	fmt.Println("App name: ", appName)
-	fmt.Println("Github token: ", githubToken)
-	fmt.Println("Vercel token: ", vercelToken)
-	fmt.Println("User Info path: ", userInfoPath)
-
 }
 
 func PreRunChecks(cmd *cobra.Command, args []string) error {
@@ -95,10 +89,10 @@ func PreRunChecks(cmd *cobra.Command, args []string) error {
 
 	return nil
 }
-  
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-	  fmt.Println(err)
-	  os.Exit(1)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
