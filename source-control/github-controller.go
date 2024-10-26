@@ -90,8 +90,6 @@ func CreateRepo(repoName, token string) (string, string) {
 		panic(err)
 	}
 
-	fmt.Println(string(body))
-
 	response := CreateRepoResponse{}
 
 	err = json.Unmarshal(body, &response)
